@@ -3,7 +3,10 @@ from flask_migrate import Migrate
 from flask_restful import Api,Resource
 
 
-from models import db, Restaurant, Pizza, restaurant_pizza
+from models.config import db
+from models.restaurant import Restaurant
+from models.pizza import Pizza
+from models.restaurant_pizza import restaurant_pizza
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pizza-restaurant.db'
