@@ -26,7 +26,7 @@ function RestaurantPizzaForm() {
     e.preventDefault();
     const formData = {
       restaurant_id: restaurantId,
-      pizza_id: pizzaId, // Corrected the variable name
+      pizza_id: pizzaId, 
       price,
     };
     fetch("/restaurant_pizzas", {
@@ -46,14 +46,14 @@ function RestaurantPizzaForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="pizza_id">Pizza:</label> {/* Corrected the htmlFor value */}
+      <label htmlFor="pizza_id">Pizza:</label> 
       <select
         id="pizza_id"
         name="pizza_id"
         value={pizzaId}
         onChange={(e) => setPizzaId(e.target.value)}
       >
-        <option value="">Select a pizza</option> {/* Changed the text */}
+        <option value="">Select a pizza</option> 
         {pizzas.map((pizza) => (
           <option key={pizza.id} value={pizza.id}>
             {pizza.name}
@@ -74,7 +74,7 @@ function RestaurantPizzaForm() {
           </option>
         ))}
       </select>
-      <label htmlFor="price">Price:</label> {/* Corrected the htmlFor value */}
+      <label htmlFor="price">Price:</label> 
       <input
         type="text"
         id="price"

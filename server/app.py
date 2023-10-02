@@ -37,8 +37,7 @@ class Display_Restaurants_by_id(Resource):
         if not restaurant:
             return {'error':'Restaurant not Found'},401
         
-        # return jsonify(restaurant),200
-        # return restaurant
+        
         restaurant_data = {
             'id': restaurant.id,
             'name': restaurant.name,
@@ -87,47 +86,41 @@ class CreateRestaurantPizza(Resource):
     def post(self):
         data = request.get_json()
 
-        # Check if all required fields are present in the request data
         required_fields = ["price", "pizza_id", "restaurant_id"]
         if not all(field in data for field in required_fields):
-            return ({"errors": ["price, pizza_id, and restaurant_id are required fields"]}), 400
+            return {"error": "price, pizza_id, and restaurant_id are required fields"}, 400
 
-        # Retrieve the pizza and restaurant by their IDs
+        try:
+            price = int(data["price"])
+            if not (1 <= price <= 30):
+                return {"error": "price must be an integer between 1 and 30"}, 400
+        except ValueError:
+            return {"error": "price must be an integer between 1 nad 30"}, 400
+
         pizza = Pizza.query.get(data["pizza_id"])
         restaurant = Restaurant.query.get(data["restaurant_id"])
-        
-        
 
-        # Check if both pizza and restaurant exist
         if not pizza or not restaurant:
             return {"error": "validation errors"}, 404
 
-        # Create a new RestaurantPizza instance and add it to the session
-        restaurant_pizza_association= restaurant_pizza.insert().values(
+        restaurant_pizza_association = restaurant_pizza.insert().values(
             price=data['price'],
-            restaurant_id= data['restaurant_id'],
+            restaurant_id=data['restaurant_id'],
             pizza_id=data['pizza_id']
         )
         db.session.execute(restaurant_pizza_association)
         db.session.commit()
 
-        # Return the pizza data associated with the created RestaurantPizza
         pizza_data = {
             'id': pizza.id,
             'name': pizza.name,
             'ingredients': pizza.ingredients
         }
 
-        return (pizza_data), 201
-
-# ... (existing code)
-
-# Add the new resource for creating RestaurantPizza
-api.add_resource(CreateRestaurantPizza, '/restaurant_pizzas', endpoint='/restaurant_pizzas')
+        return pizza_data, 201
 
 
-
-        
+api.add_resource(CreateRestaurantPizza, '/restaurant_pizzas', endpoint='/restaurant_pizzas')   
 api.add_resource(Display,'/restaurants',endpoint='/restaurants')
 api.add_resource(Display_Restaurants_by_id,'/restaurants/<int:id>',endpoint='/restaurants/<int:id>')
 api.add_resource(Display_Pizzas,'/pizzas', endpoint='/pizzas')
